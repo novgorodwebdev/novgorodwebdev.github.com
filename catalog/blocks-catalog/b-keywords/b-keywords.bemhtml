@@ -1,0 +1,7 @@
+block b-keywords {
+    tag: 'ul'
+    
+    elem word {
+        tag: 'li'
+    }
+}

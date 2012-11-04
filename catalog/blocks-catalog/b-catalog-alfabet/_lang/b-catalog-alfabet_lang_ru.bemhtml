@@ -1,0 +1,18 @@
+block b-catalog-alfabet, mod lang ru {
+    content: { 
+        var cont = [];
+        
+        var ruStart = 1072; 
+        var ruEnd = 1103; 
+        
+        for (var i = ruStart; i <= ruEnd; i++) {
+            cont.push({elem: 'letter', content: String.fromCharCode(i)});
+        }
+        
+        for (var i = 0; i < 10; i++) {
+            cont.push({elem: 'letter', content: i});
+        }
+        
+        return cont;
+     }
+}

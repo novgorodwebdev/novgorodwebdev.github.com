@@ -1,0 +1,18 @@
+block b-catalog-alfabet, mod lang en {
+    content: { 
+        var cont = [];
+        
+        var enStart = 97; 
+        var enEnd = 122; 
+        
+        for (var i = enStart; i <= enEnd; i++) {
+            cont.push({elem: 'letter', content: String.fromCharCode(i)});
+        }
+        
+        for (var i = 0; i < 10; i++) {
+            cont.push({elem: 'letter', content: i});
+        }
+        
+        return cont;
+     }
+}

@@ -1,0 +1,90 @@
+/* ../../bem-bl/blocks-desktop/b-search/b-search.css begin */
+.b-search__input
+{
+    width: 100%;
+    margin: 0;
+
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.b-search__button
+{
+    margin: 0;
+}
+/* ../../bem-bl/blocks-desktop/b-search/b-search.css end */
+
+/* ../../bem-bl/blocks-desktop/b-layout-table/b-layout-table.css begin */
+.b-layout-table
+{
+    font-size: 100%;
+
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+.b-layout-table__gap,
+.b-layout-table__cell
+{
+    padding: 0;
+
+    vertical-align: top;
+}
+
+/* ../../bem-bl/blocks-desktop/b-layout-table/b-layout-table.css end */
+
+/* ../../bem-bl/blocks-desktop/b-search/__layout/b-search__layout.css begin */
+.b-search__layout-input
+{
+    width: 100%;
+
+    vertical-align: middle;
+}
+
+.b-search__layout-button
+{
+    padding-left: 6px;
+
+    vertical-align: middle;
+}
+
+/* ../../bem-bl/blocks-desktop/b-search/__layout/b-search__layout.css end */
+
+/* ../../blocks-catalog/b-catalog-alfabet/b-catalog-alfabet.css begin */
+.b-catalog-alfabet
+{
+}
+
+/* ../../blocks-catalog/b-catalog-alfabet/b-catalog-alfabet.css end */
+
+/* ../../blocks-catalog/b-catalog-alfabet/__letter/b-catalog-alfabet__letter.css begin */
+.b-catalog-alfabet__letter {
+    display: inline-block;
+    margin: 0 0 0 5px;
+}
+
+/* ../../blocks-catalog/b-catalog-alfabet/__letter/b-catalog-alfabet__letter.css end */
+
+/* ../../blocks-catalog/b-catalog-alfabet/_lang/b-catalog-alfabet_lang_ru.css begin */
+.b-catalog-alfabet_lang_ru
+{
+}
+
+/* ../../blocks-catalog/b-catalog-alfabet/_lang/b-catalog-alfabet_lang_ru.css end */
+
+/* ../../blocks-catalog/b-catalog-alfabet/_lang/b-catalog-alfabet_lang_en.css begin */
+.b-catalog-alfabet_lang_en
+{
+}
+
+/* ../../blocks-catalog/b-catalog-alfabet/_lang/b-catalog-alfabet_lang_en.css end */
+
+/* ../../blocks-catalog/b-keywords/b-keywords.css begin */
+.b-keywords
+{
+}
+
+/* ../../blocks-catalog/b-keywords/b-keywords.css end */
+

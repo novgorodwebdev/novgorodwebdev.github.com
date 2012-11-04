@@ -1,0 +1,10 @@
+block b-catalog-alfabet, elem letter  {
+    tag: 'li'
+    content: 
+        { 
+            block: 'b-link',
+            content: this.ctx.content,
+            url: 'search?letter=' + this.ctx.content
+        }
+}
+ 
