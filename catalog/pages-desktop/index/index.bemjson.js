@@ -1,6 +1,6 @@
 ({
     block: 'b-page',
-    title: 'Title of the page',
+    title: 'Title of Catalog',
     favicon: '/favicon.ico',
     head: [
         { elem: 'css', url: '_index.css', ie: false },
@@ -26,12 +26,12 @@
         {
             block: 'b-catalog-alfabet',
             mods: { lang: 'ru' },
-            content:{elem: 'letter'}
+            content: {elem: 'letter'}
         },
         {
             block: 'b-catalog-alfabet',
             mods: { lang: 'en' },
-            content:{elem: 'letter'}
+            content: {elem: 'letter'}
         },
         {
             block: 'b-keywords',

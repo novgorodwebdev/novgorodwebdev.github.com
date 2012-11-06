@@ -3,13 +3,12 @@ var extend = require('bem/lib/util').extend;
 exports.getTechs = function() {
     return {
         'bemjson.js': '',
-        'ie.css': 'ie.css',
-        'ie6.css': 'ie6.css',
-        'ie7.css': 'ie7.css',
-        'ie8.css': 'ie8.css',
-        'ie9.css': 'ie9.css',
+        'bemdecl.js': 'bemdecl.js',
+        'deps.js': 'deps.js',
+        'js': 'js-i',
+        'css': 'css',
         'bemhtml.js': '../../bem-bl/blocks-common/i-bem/bem/techs/bemhtml.js',
-        'html': '../../bem-bl/blocks-common/i-bem/bem/techs/html'
+        'html': '../../bem-bl/blocks-common/i-bem/bem/techs/html.js'
     };
 };
 

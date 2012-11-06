@@ -1,6 +1,6 @@
 //process.env.YENV = 'production';
 
-/* MAKE.decl('Arch', {
+MAKE.decl('Arch', {
 
     getLibraries: function() {
 
@@ -14,7 +14,8 @@
 
     }
 
-}); */
+});
+
 
 MAKE.decl('BundleNode', {
 
@@ -24,13 +25,8 @@ MAKE.decl('BundleNode', {
             'bemdecl.js',
             'deps.js',
             'bemhtml.js',
-            'js',
             'css',
-            'ie.css',
-            'ie6.css',
-            'ie7.css',
-            'ie8.css',
-            'ie9.css',
+            'js',
             'html'
         ];
     }
