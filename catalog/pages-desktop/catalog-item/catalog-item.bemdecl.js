@@ -3,13 +3,52 @@ exports.blocks = [
         "name": "b-page"
     },
     {
-        "name": "catalog-item"
+        "name": "b-catalog-item",
+        "elems": [
+            {
+                "name": "layout"
+            }
+        ],
+        "mods": [
+            {
+                "name": "column",
+                "vals": [
+                    "left",
+                    "right"
+                ]
+            }
+        ]
     },
     {
         "name": "b-title"
     },
     {
         "name": "b-synonyms"
+    },
+    {
+        "name": "b-contacts"
+    },
+    {
+        "name": "b-address"
+    },
+    {
+        "name": "b-phones"
+    },
+    {
+        "name": "b-phone",
+        "mods": [
+            {
+                "name": "type",
+                "vals": [
+                    "reception",
+                    "director",
+                    "accountant"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "b-timetable"
     },
     {
         "name": "b-keywords",
@@ -21,5 +60,16 @@ exports.blocks = [
     },
     {
         "name": "b-link"
+    },
+    {
+        "name": "b-map",
+        "mods": [
+            {
+                "name": "provider",
+                "vals": [
+                    "yandex"
+                ]
+            }
+        ]
     }
 ];

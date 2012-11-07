@@ -1,3 +1,19 @@
+/* ../../blocks-catalog/b-catalog-item/b-catalog-item.css begin */
+.b-catalog-item
+{
+}
+
+/* ../../blocks-catalog/b-catalog-item/b-catalog-item.css end */
+
+/* ../../blocks-catalog/b-catalog-item/__layout/b-catalog-item__layout.css begin */
+.b-catalog-item__layout {
+width: 50%;
+display: inline-block;
+vertical-align: top;
+}
+
+/* ../../blocks-catalog/b-catalog-item/__layout/b-catalog-item__layout.css end */
+
 /* ../../blocks-catalog/b-keywords/b-keywords.css begin */
 .b-keywords
 {

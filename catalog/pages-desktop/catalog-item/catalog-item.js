@@ -8,4 +8,6 @@
 /*borschik:include:../../bem-bl/blocks-common/i-ecma/__array/i-ecma__array.js*/;
 /*borschik:include:../../bem-bl/blocks-common/i-ecma/__function/i-ecma__function.js*/;
 /*borschik:include:../../bem-bl/blocks-common/i-bem/__internal/i-bem__internal.js*/;
+/*borschik:include:../../blocks-catalog/b-catalog-item/b-catalog-item.js*/;
+/*borschik:include:../../blocks-catalog/b-catalog-item/__layout/b-catalog-item__layout.js*/;
 /*borschik:include:../../blocks-catalog/b-keywords/b-keywords.js*/;

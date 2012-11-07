@@ -9,7 +9,7 @@ var BEMHTML = (function(exports) {
                 if (!!this.elem === false) {
                     return $5.call(this);
                 } else {
-                    return $117.call(this);
+                    return $125.call(this);
                 }
             } else if (__t === "b-page") {
                 var __t = this.elem;
@@ -26,7 +26,7 @@ var BEMHTML = (function(exports) {
                         };
                         return;
                     } else {
-                        return $117.call(this);
+                        return $125.call(this);
                     }
                 } else if (__t === "css") {
                     if (!this.ctx.url === false) {
@@ -36,16 +36,16 @@ var BEMHTML = (function(exports) {
                         };
                         return;
                     } else {
-                        return $117.call(this);
+                        return $125.call(this);
                     }
                 } else if (__t === "meta") {
                     return this.ctx.attrs;
                     return;
                 } else {
-                    return $117.call(this);
+                    return $125.call(this);
                 }
             } else {
-                return $117.call(this);
+                return $125.call(this);
             }
         } else if (__t === "tag") {
             var __t = this.block;
@@ -54,7 +54,7 @@ var BEMHTML = (function(exports) {
                     return "a";
                     return;
                 } else {
-                    return $117.call(this);
+                    return $125.call(this);
                 }
             } else if (__t === "b-keywords") {
                 if (this.elem === "word") {
@@ -65,7 +65,19 @@ var BEMHTML = (function(exports) {
                         return "ul";
                         return;
                     } else {
-                        return $117.call(this);
+                        return $125.call(this);
+                    }
+                }
+            } else if (__t === "b-catalog-item") {
+                if (this.elem === "layout") {
+                    return "div";
+                    return;
+                } else {
+                    if (!!this.elem === false) {
+                        return "div";
+                        return;
+                    } else {
+                        return $125.call(this);
                     }
                 }
             } else if (__t === "b-page") {
@@ -94,17 +106,17 @@ var BEMHTML = (function(exports) {
                     return "head";
                     return;
                 } else {
-                    return $117.call(this);
+                    return $125.call(this);
                 }
             } else if (__t === "i-ua") {
                 if (!!this.elem === false) {
                     return "script";
                     return;
                 } else {
-                    return $117.call(this);
+                    return $125.call(this);
                 }
             } else {
-                return $117.call(this);
+                return $125.call(this);
             }
         } else if (__t === "bem") {
             var __t = this.block;
@@ -114,17 +126,17 @@ var BEMHTML = (function(exports) {
                     return false;
                     return;
                 } else {
-                    return $117.call(this);
+                    return $125.call(this);
                 }
             } else if (__t === "i-ua") {
                 if (!!this.elem === false) {
                     return false;
                     return;
                 } else {
-                    return $117.call(this);
+                    return $125.call(this);
                 }
             } else {
-                return $117.call(this);
+                return $125.call(this);
             }
         } else if (__t === "default") {
             var __t = this.block;
@@ -132,15 +144,15 @@ var BEMHTML = (function(exports) {
                 if (this.elem === "css") {
                     if (!this.ctx.hasOwnProperty("ie") === false) {
                         if (!!this.ctx._ieCommented === false) {
-                            return $92.call(this);
+                            return $100.call(this);
                         } else {
-                            return $97.call(this);
+                            return $105.call(this);
                         }
                     } else {
-                        return $97.call(this);
+                        return $105.call(this);
                     }
                 } else {
-                    return $97.call(this);
+                    return $105.call(this);
                 }
             } else if (__t === "i-jquery") {
                 if (this.elem === "core") {
@@ -152,10 +164,10 @@ var BEMHTML = (function(exports) {
                     }, __r38 = apply.call(__this), this._mode = __r36, this.ctx = __r37, "", __r38;
                     return;
                 } else {
-                    return $117.call(this);
+                    return $125.call(this);
                 }
             } else {
-                return $117.call(this);
+                return $125.call(this);
             }
         } else if (__t === "content") {
             if (this.block === "i-ua") {
@@ -163,28 +175,28 @@ var BEMHTML = (function(exports) {
                     return [ ";(function(d,e,c,r){", "e=d.documentElement;", 'c="className";', 'r="replace";', 'e[c]=e[c][r]("i-ua_js_no","i-ua_js_yes");', 'if(d.compatMode!="CSS1Compat")', 'e[c]=e[c][r]("i-ua_css_standart","i-ua_css_quirks")', "})(document);" ].join("");
                     return;
                 } else {
-                    return $117.call(this);
+                    return $125.call(this);
                 }
             } else {
-                return $117.call(this);
+                return $125.call(this);
             }
         } else {
-            return $117.call(this);
+            return $125.call(this);
         }
     }
     function $5() {
         var __this = this;
         var __r47, __r48, __r49, __r50;
-        var _$13ctx = this.ctx, _$13props = [ "title", "target" ], _$13p = typeof _$13ctx.url, _$13a = {
-            href: _$13p === "undefined" || _$13p === "string" ? _$13ctx.url : (_$13p = [], "", __r47 = this._buf, this._buf = _$13p, __r48 = this._mode, this._mode = "", __r49 = this.ctx, this.ctx = _$13ctx.url, __r50 = apply.call(__this), this._buf = __r47, this._mode = __r48, this.ctx = __r49, "", __r50, _$13p.join(""))
+        var _$15ctx = this.ctx, _$15props = [ "title", "target" ], _$15p = typeof _$15ctx.url, _$15a = {
+            href: _$15p === "undefined" || _$15p === "string" ? _$15ctx.url : (_$15p = [], "", __r47 = this._buf, this._buf = _$15p, __r48 = this._mode, this._mode = "", __r49 = this.ctx, this.ctx = _$15ctx.url, __r50 = apply.call(__this), this._buf = __r47, this._mode = __r48, this.ctx = __r49, "", __r50, _$15p.join(""))
         };
-        while (_$13p = _$13props.pop()) {
-            _$13ctx[_$13p] && (_$13a[_$13p] = _$13ctx[_$13p]);
+        while (_$15p = _$15props.pop()) {
+            _$15ctx[_$15p] && (_$15a[_$15p] = _$15ctx[_$15p]);
         }
-        return _$13a;
+        return _$15a;
         return;
     }
-    function $92() {
+    function $100() {
         var _$rie = this.ctx.ie;
         if (_$rie === true) {
             {
@@ -223,14 +235,14 @@ var BEMHTML = (function(exports) {
         }
         return;
     }
-    function $97() {
+    function $105() {
         if (!!this.elem === false) {
-            return $99.call(this);
+            return $107.call(this);
         } else {
-            return $117.call(this);
+            return $125.call(this);
         }
     }
-    function $99() {
+    function $107() {
         this._buf.push("<!DOCTYPE html>");
         {
             "";
@@ -275,9 +287,9 @@ var BEMHTML = (function(exports) {
         }
         return;
     }
-    function $117() {
+    function $125() {
         if (!!this._start === false) {
-            return $119.call(this);
+            return $127.call(this);
         } else {
             var __t = this._mode;
             if (__t === "content") {
@@ -287,7 +299,7 @@ var BEMHTML = (function(exports) {
                 return undefined;
                 return;
             } else if (__t === "default") {
-                return $138.call(this);
+                return $146.call(this);
             } else {
                 if (!this._.isSimple(this.ctx) === false) {
                     if (!!this._mode === false) {
@@ -296,15 +308,15 @@ var BEMHTML = (function(exports) {
                         (_$3ctx && _$3ctx !== true || _$3ctx === 0) && this._buf.push(_$3ctx);
                         return;
                     } else {
-                        return $145.call(this);
+                        return $153.call(this);
                     }
                 } else {
-                    return $145.call(this);
+                    return $153.call(this);
                 }
             }
         }
     }
-    function $119() {
+    function $127() {
         var _$dBEM_ = {}, _$dtoString = Object.prototype.toString, _$dSHORT_TAGS = {
             area: 1,
             base: 1,
@@ -485,7 +497,7 @@ var BEMHTML = (function(exports) {
         return _$dctx._buf.join("");
         return;
     }
-    function $138() {
+    function $146() {
         var __this = this;
         var __r19, __r7, __r11, __r12, __r13, __r14, __r15, __r16, __r17, __r18, __r8, __r20, __r21, __r22, __r25, __r26, __r27, __r28, __r29, __r30;
         var _$4_this = this, _$4BEM_ = _$4_this.BEM, _$4v = this.ctx, _$4buf = this._buf, _$4tag;
@@ -626,19 +638,19 @@ var BEMHTML = (function(exports) {
         }
         return;
     }
-    function $145() {
+    function $153() {
         if (!!this._mode === false) {
             if (!!this.ctx === false) {
                 this._listLength--;
                 return;
             } else {
-                return $151.call(this);
+                return $159.call(this);
             }
         } else {
-            return $151.call(this);
+            return $159.call(this);
         }
     }
-    function $151() {
+    function $159() {
         var __this = this;
         if (!this._.isArray(this.ctx) === false) {
             if (!!this._mode === false) {
@@ -662,16 +674,16 @@ var BEMHTML = (function(exports) {
                 _$1prevNotNewList || (this.position = _$1prevPos);
                 return;
             } else {
-                return $157.call(this);
+                return $165.call(this);
             }
         } else {
-            return $157.call(this);
+            return $165.call(this);
         }
     }
-    function $157() {
+    function $165() {
         if (!true === false) {
             if (!!this._mode === false) {
-                return $160.call(this);
+                return $168.call(this);
             } else {
                 return $e.call(this);
             }
@@ -679,7 +691,7 @@ var BEMHTML = (function(exports) {
             return $e.call(this);
         }
     }
-    function $160() {
+    function $168() {
         var __this = this;
         var _$0vBlock = this.ctx.block, _$0vElem = this.ctx.elem, _$0block = this._currBlock || this.block;
         this.ctx || (this.ctx = {});

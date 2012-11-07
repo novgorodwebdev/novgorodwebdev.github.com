@@ -1507,6 +1507,56 @@ BEM.INTERNAL = {
 
 (function(undefined) {
 
+BEM.DOM.decl('b-catalog-item', {
+
+    onSetMod : {
+
+        'js' : function() {
+            /* ... */
+        }
+
+    }
+
+}, {
+
+    live : function() {
+        /* ... */
+    }
+
+});
+
+})();
+;
+/** @requires BEM */
+/** @requires BEM.DOM */
+
+(function(undefined) {
+
+BEM.DOM.decl('b-catalog-item', {
+
+    onSetMod : {
+
+        'js' : function() {
+            /* ... */
+        }
+
+    }
+
+}, {
+
+    live : function() {
+        /* ... */
+    }
+
+});
+
+})();
+;
+/** @requires BEM */
+/** @requires BEM.DOM */
+
+(function(undefined) {
+
 BEM.DOM.decl('b-keywords', {
 
     onSetMod : {

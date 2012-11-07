@@ -56,13 +56,65 @@ exports.deps = [
         "block": "b-page"
     },
     {
-        "block": "catalog-item"
+        "block": "b-catalog-item"
+    },
+    {
+        "block": "b-catalog-item",
+        "elem": "layout"
+    },
+    {
+        "block": "b-catalog-item",
+        "mod": "column"
+    },
+    {
+        "block": "b-catalog-item",
+        "mod": "column",
+        "val": "left"
+    },
+    {
+        "block": "b-catalog-item",
+        "mod": "column",
+        "val": "right"
     },
     {
         "block": "b-title"
     },
     {
         "block": "b-synonyms"
+    },
+    {
+        "block": "b-contacts"
+    },
+    {
+        "block": "b-address"
+    },
+    {
+        "block": "b-phones"
+    },
+    {
+        "block": "b-phone"
+    },
+    {
+        "block": "b-phone",
+        "mod": "type"
+    },
+    {
+        "block": "b-phone",
+        "mod": "type",
+        "val": "reception"
+    },
+    {
+        "block": "b-phone",
+        "mod": "type",
+        "val": "director"
+    },
+    {
+        "block": "b-phone",
+        "mod": "type",
+        "val": "accountant"
+    },
+    {
+        "block": "b-timetable"
     },
     {
         "block": "b-keywords"
@@ -73,6 +125,18 @@ exports.deps = [
     },
     {
         "block": "b-link"
+    },
+    {
+        "block": "b-map"
+    },
+    {
+        "block": "b-map",
+        "mod": "provider"
+    },
+    {
+        "block": "b-map",
+        "mod": "provider",
+        "val": "yandex"
     }
 ];
 exports.depsByTechs = {
