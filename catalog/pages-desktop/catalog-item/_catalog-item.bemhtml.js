@@ -5,28 +5,31 @@ var BEMHTML = (function(exports) {
         var __t = this._mode;
         if (__t === "attrs") {
             var __t = this.block;
-            if (__t === "b-link") {
+            if (__t === "b-map") {
                 if (!!this.elem === false) {
-                    return $5.call(this);
+                    return {
+                        blocks: "test"
+                    };
+                    return;
                 } else {
-                    return $125.call(this);
+                    return $170.call(this);
+                }
+            } else if (__t === "b-link") {
+                if (!!this.elem === false) {
+                    return $10.call(this);
+                } else {
+                    return $170.call(this);
                 }
             } else if (__t === "b-page") {
                 var __t = this.elem;
-                if (__t === "favicon") {
-                    return {
-                        rel: "shortcut icon",
-                        href: this.ctx.url
-                    };
-                    return;
-                } else if (__t === "js") {
+                if (__t === "js") {
                     if (!this.ctx.url === false) {
                         return {
                             src: this.ctx.url
                         };
                         return;
                     } else {
-                        return $125.call(this);
+                        return $170.call(this);
                     }
                 } else if (__t === "css") {
                     if (!this.ctx.url === false) {
@@ -36,16 +39,33 @@ var BEMHTML = (function(exports) {
                         };
                         return;
                     } else {
-                        return $125.call(this);
+                        return $170.call(this);
                     }
+                } else if (__t === "favicon") {
+                    return {
+                        rel: "shortcut icon",
+                        href: this.ctx.url
+                    };
+                    return;
                 } else if (__t === "meta") {
                     return this.ctx.attrs;
                     return;
                 } else {
-                    return $125.call(this);
+                    return $170.call(this);
                 }
             } else {
-                return $125.call(this);
+                return $170.call(this);
+            }
+        } else if (__t === "js") {
+            if (this.block === "b-map") {
+                if (!!this.elem === false) {
+                    return true;
+                    return;
+                } else {
+                    return $170.call(this);
+                }
+            } else {
+                return $170.call(this);
             }
         } else if (__t === "tag") {
             var __t = this.block;
@@ -54,7 +74,7 @@ var BEMHTML = (function(exports) {
                     return "a";
                     return;
                 } else {
-                    return $125.call(this);
+                    return $170.call(this);
                 }
             } else if (__t === "b-keywords") {
                 if (this.elem === "word") {
@@ -65,27 +85,24 @@ var BEMHTML = (function(exports) {
                         return "ul";
                         return;
                     } else {
-                        return $125.call(this);
+                        return $170.call(this);
                     }
                 }
             } else if (__t === "b-catalog-item") {
                 if (this.elem === "layout") {
-                    return "div";
+                    return "span";
                     return;
                 } else {
                     if (!!this.elem === false) {
                         return "div";
                         return;
                     } else {
-                        return $125.call(this);
+                        return $170.call(this);
                     }
                 }
             } else if (__t === "b-page") {
                 var __t = this.elem;
-                if (__t === "favicon") {
-                    return "link";
-                    return;
-                } else if (__t === "js") {
+                if (__t === "js") {
                     return "script";
                     return;
                 } else if (__t === "css") {
@@ -96,47 +113,55 @@ var BEMHTML = (function(exports) {
                         return "style";
                         return;
                     }
+                } else if (__t === "favicon") {
+                    return "link";
+                    return;
                 } else if (__t === "meta") {
                     return "meta";
-                    return;
-                } else if (__t === "body") {
-                    return "body";
                     return;
                 } else if (__t === "head") {
                     return "head";
                     return;
+                } else if (__t === "root") {
+                    return "html";
+                    return;
                 } else {
-                    return $125.call(this);
+                    if (!!this.elem === false) {
+                        return "body";
+                        return;
+                    } else {
+                        return $170.call(this);
+                    }
                 }
             } else if (__t === "i-ua") {
                 if (!!this.elem === false) {
                     return "script";
                     return;
                 } else {
-                    return $125.call(this);
+                    return $170.call(this);
                 }
             } else {
-                return $125.call(this);
+                return $170.call(this);
             }
         } else if (__t === "bem") {
             var __t = this.block;
             if (__t === "b-page") {
                 var __t = this.elem;
-                if (__t === "favicon" || __t === "js" || __t === "css" || __t === "meta" || __t === "head") {
+                if (__t === "js" || __t === "css" || __t === "favicon" || __t === "meta" || __t === "head" || __t === "root") {
                     return false;
                     return;
                 } else {
-                    return $125.call(this);
+                    return $170.call(this);
                 }
             } else if (__t === "i-ua") {
                 if (!!this.elem === false) {
                     return false;
                     return;
                 } else {
-                    return $125.call(this);
+                    return $170.call(this);
                 }
             } else {
-                return $125.call(this);
+                return $170.call(this);
             }
         } else if (__t === "default") {
             var __t = this.block;
@@ -144,15 +169,15 @@ var BEMHTML = (function(exports) {
                 if (this.elem === "css") {
                     if (!this.ctx.hasOwnProperty("ie") === false) {
                         if (!!this.ctx._ieCommented === false) {
-                            return $100.call(this);
+                            return $118.call(this);
                         } else {
-                            return $105.call(this);
+                            return $123.call(this);
                         }
                     } else {
-                        return $105.call(this);
+                        return $123.call(this);
                     }
                 } else {
-                    return $105.call(this);
+                    return $123.call(this);
                 }
             } else if (__t === "i-jquery") {
                 if (this.elem === "core") {
@@ -164,10 +189,45 @@ var BEMHTML = (function(exports) {
                     }, __r38 = apply.call(__this), this._mode = __r36, this.ctx = __r37, "", __r38;
                     return;
                 } else {
-                    return $125.call(this);
+                    return $170.call(this);
                 }
             } else {
-                return $125.call(this);
+                return $170.call(this);
+            }
+        } else if (__t === "cls") {
+            if (this.block === "b-page") {
+                if (this.elem === "root") {
+                    return "i-ua_js_no i-ua_css_standard";
+                    return;
+                } else {
+                    return $170.call(this);
+                }
+            } else {
+                return $170.call(this);
+            }
+        } else if (__t === "mix") {
+            if (this.block === "b-page") {
+                if (!!this.elem === false) {
+                    return [ {
+                        elem: "body"
+                    } ];
+                    return;
+                } else {
+                    return $170.call(this);
+                }
+            } else {
+                return $170.call(this);
+            }
+        } else if (__t === "doctype") {
+            if (this.block === "b-page") {
+                if (!!this.elem === false) {
+                    return this.ctx.doctype || "<!DOCTYPE html>";
+                    return;
+                } else {
+                    return $170.call(this);
+                }
+            } else {
+                return $170.call(this);
             }
         } else if (__t === "content") {
             if (this.block === "i-ua") {
@@ -175,35 +235,36 @@ var BEMHTML = (function(exports) {
                     return [ ";(function(d,e,c,r){", "e=d.documentElement;", 'c="className";', 'r="replace";', 'e[c]=e[c][r]("i-ua_js_no","i-ua_js_yes");', 'if(d.compatMode!="CSS1Compat")', 'e[c]=e[c][r]("i-ua_css_standart","i-ua_css_quirks")', "})(document);" ].join("");
                     return;
                 } else {
-                    return $125.call(this);
+                    return $170.call(this);
                 }
             } else {
-                return $125.call(this);
+                return $170.call(this);
             }
         } else {
-            return $125.call(this);
+            return $170.call(this);
         }
     }
-    function $5() {
+    function $10() {
         var __this = this;
-        var __r47, __r48, __r49, __r50;
-        var _$15ctx = this.ctx, _$15props = [ "title", "target" ], _$15p = typeof _$15ctx.url, _$15a = {
-            href: _$15p === "undefined" || _$15p === "string" ? _$15ctx.url : (_$15p = [], "", __r47 = this._buf, this._buf = _$15p, __r48 = this._mode, this._mode = "", __r49 = this.ctx, this.ctx = _$15ctx.url, __r50 = apply.call(__this), this._buf = __r47, this._mode = __r48, this.ctx = __r49, "", __r50, _$15p.join(""))
+        var __r52, __r53, __r54, __r55;
+        var _$1actx = this.ctx, _$1aprops = [ "title", "target" ], _$1ap = typeof _$1actx.url, _$1aa = {
+            href: _$1ap === "undefined" || _$1ap === "string" ? _$1actx.url : (_$1ap = [], "", __r52 = this._buf, this._buf = _$1ap, __r53 = this._mode, this._mode = "", __r54 = this.ctx, this.ctx = _$1actx.url, __r55 = apply.call(__this), this._buf = __r52, this._mode = __r53, this.ctx = __r54, "", __r55, _$1ap.join(""))
         };
-        while (_$15p = _$15props.pop()) {
-            _$15ctx[_$15p] && (_$15a[_$15p] = _$15ctx[_$15p]);
+        while (_$1ap = _$1aprops.pop()) {
+            _$1actx[_$1ap] && (_$1aa[_$1ap] = _$1actx[_$1ap]);
         }
-        return _$15a;
+        return _$1aa;
         return;
     }
-    function $100() {
-        var _$rie = this.ctx.ie;
-        if (_$rie === true) {
+    function $118() {
+        var __this = this;
+        var _$zie = this.ctx.ie;
+        if (_$zie === true) {
             {
                 "";
-                var __r41 = this._mode;
+                var __r46 = this._mode;
                 this._mode = "";
-                var __r42 = this.ctx;
+                var __r47 = this.ctx;
                 this.ctx = [ 6, 7, 8, 9 ].map(function(v) {
                     return {
                         elem: "css",
@@ -211,85 +272,96 @@ var BEMHTML = (function(exports) {
                         ie: "IE " + v
                     };
                 }, this);
-                this.apply();
-                this._mode = __r41;
-                this.ctx = __r42;
+                apply.call(__this);
+                this._mode = __r46;
+                this.ctx = __r47;
                 "";
             }
+            undefined;
         } else {
-            var _$rhideRule = !_$rie ? [ "gt IE 9", "<!-->", "<!--" ] : _$rie == "!IE" ? [ _$rie, "<!-->", "<!--" ] : [ _$rie, "", "" ];
+            var _$zhideRule = !_$zie ? [ "gt IE 9", "<!-->", "<!--" ] : _$zie === "!IE" ? [ _$zie, "<!-->", "<!--" ] : [ _$zie, "", "" ];
             {
                 "";
-                var __r43 = this._mode;
+                var __r48 = this._mode;
                 this._mode = "";
-                var __r44 = this.ctx, __r45 = __r44._ieCommented;
-                __r44._ieCommented = true;
-                var __r46 = this.ctx;
-                this.ctx = [ "<!--[if " + _$rhideRule[0] + "]>", _$rhideRule[1], this.ctx, _$rhideRule[2], "<![endif]-->" ];
-                this.apply();
-                this._mode = __r43;
-                __r44._ieCommented = __r45;
-                this.ctx = __r46;
+                var __r49 = this.ctx, __r50 = __r49._ieCommented;
+                __r49._ieCommented = true;
+                var __r51 = this.ctx;
+                this.ctx = [ "<!--[if " + _$zhideRule[0] + "]>", _$zhideRule[1], this.ctx, _$zhideRule[2], "<![endif]-->" ];
+                apply.call(__this);
+                this._mode = __r48;
+                __r49._ieCommented = __r50;
+                this.ctx = __r51;
                 "";
             }
+            undefined;
         }
         return;
     }
-    function $105() {
-        if (!!this.elem === false) {
-            return $107.call(this);
+    function $123() {
+        if (!(this["__$anflg"] !== 841823256) === false) {
+            if (!!this.elem === false) {
+                return $126.call(this);
+            } else {
+                return $170.call(this);
+            }
         } else {
-            return $125.call(this);
+            return $170.call(this);
         }
     }
-    function $107() {
-        this._buf.push("<!DOCTYPE html>");
+    function $126() {
+        var __this = this;
+        var __r39, __r40;
+        var _$jctx = this.ctx, _$jdtype = ("", __r39 = this._mode, this._mode = "doctype", __r40 = apply.call(__this), this._mode = __r39, "", __r40), _$jbuf = [ _$jdtype, {
+            elem: "root",
+            content: [ {
+                elem: "head",
+                content: [ {
+                    tag: "meta",
+                    attrs: {
+                        charset: "utf-8"
+                    }
+                }, {
+                    tag: "meta",
+                    attrs: {
+                        "http-equiv": "X-UA-Compatible",
+                        content: "IE=EmulateIE7, IE=edge"
+                    }
+                }, {
+                    tag: "title",
+                    content: _$jctx.title
+                }, _$jctx.favicon ? {
+                    elem: "favicon",
+                    url: _$jctx.favicon
+                } : "", _$jctx.meta, {
+                    block: "i-ua"
+                }, _$jctx.head ]
+            }, _$jctx ]
+        } ];
         {
             "";
-            var __r39 = this._mode;
-            this._mode = "";
-            var __r40 = this.ctx;
-            this.ctx = {
-                tag: "html",
-                cls: "i-ua_js_no i-ua_css_standard",
-                content: [ {
-                    elem: "head",
-                    content: [ {
-                        tag: "meta",
-                        attrs: {
-                            charset: "utf-8"
-                        }
-                    }, {
-                        tag: "meta",
-                        attrs: {
-                            "http-equiv": "X-UA-Compatible",
-                            content: "IE=EmulateIE7, IE=edge"
-                        }
-                    }, {
-                        tag: "title",
-                        content: this.ctx.title
-                    }, this.ctx.favicon ? {
-                        elem: "favicon",
-                        url: this.ctx.favicon
-                    } : "", this.ctx.meta, {
-                        block: "i-ua"
-                    }, this.ctx.head ]
-                }, {
-                    elem: "body",
-                    mix: [ this.ctx ],
-                    content: [ this.ctx.content ]
-                } ]
-            };
-            this.apply();
-            this._mode = __r39;
-            this.ctx = __r40;
+            var __r41 = this["__$anflg"];
+            this["__$anflg"] = 841823256;
+            {
+                "";
+                var __r42 = this.ctx;
+                this.ctx = _$jbuf;
+                var __r43 = this._mode;
+                this._mode = "";
+                apply.call(__this);
+                this.ctx = __r42;
+                this._mode = __r43;
+                "";
+            }
+            this["__$anflg"] = __r41;
             "";
         }
+        undefined;
         return;
     }
-    function $125() {
+    function $170() {
         if (!!this._start === false) {
-            return $127.call(this);
+            return $172.call(this);
         } else {
             var __t = this._mode;
             if (__t === "content") {
@@ -299,7 +371,7 @@ var BEMHTML = (function(exports) {
                 return undefined;
                 return;
             } else if (__t === "default") {
-                return $146.call(this);
+                return $191.call(this);
             } else {
                 if (!this._.isSimple(this.ctx) === false) {
                     if (!!this._mode === false) {
@@ -308,15 +380,15 @@ var BEMHTML = (function(exports) {
                         (_$3ctx && _$3ctx !== true || _$3ctx === 0) && this._buf.push(_$3ctx);
                         return;
                     } else {
-                        return $153.call(this);
+                        return $198.call(this);
                     }
                 } else {
-                    return $153.call(this);
+                    return $198.call(this);
                 }
             }
         }
     }
-    function $127() {
+    function $172() {
         var _$dBEM_ = {}, _$dtoString = Object.prototype.toString, _$dSHORT_TAGS = {
             area: 1,
             base: 1,
@@ -497,7 +569,7 @@ var BEMHTML = (function(exports) {
         return _$dctx._buf.join("");
         return;
     }
-    function $146() {
+    function $191() {
         var __this = this;
         var __r19, __r7, __r11, __r12, __r13, __r14, __r15, __r16, __r17, __r18, __r8, __r20, __r21, __r22, __r25, __r26, __r27, __r28, __r29, __r30;
         var _$4_this = this, _$4BEM_ = _$4_this.BEM, _$4v = this.ctx, _$4buf = this._buf, _$4tag;
@@ -638,19 +710,19 @@ var BEMHTML = (function(exports) {
         }
         return;
     }
-    function $153() {
+    function $198() {
         if (!!this._mode === false) {
             if (!!this.ctx === false) {
                 this._listLength--;
                 return;
             } else {
-                return $159.call(this);
+                return $204.call(this);
             }
         } else {
-            return $159.call(this);
+            return $204.call(this);
         }
     }
-    function $159() {
+    function $204() {
         var __this = this;
         if (!this._.isArray(this.ctx) === false) {
             if (!!this._mode === false) {
@@ -674,16 +746,16 @@ var BEMHTML = (function(exports) {
                 _$1prevNotNewList || (this.position = _$1prevPos);
                 return;
             } else {
-                return $165.call(this);
+                return $210.call(this);
             }
         } else {
-            return $165.call(this);
+            return $210.call(this);
         }
     }
-    function $165() {
+    function $210() {
         if (!true === false) {
             if (!!this._mode === false) {
-                return $168.call(this);
+                return $213.call(this);
             } else {
                 return $e.call(this);
             }
@@ -691,7 +763,7 @@ var BEMHTML = (function(exports) {
             return $e.call(this);
         }
     }
-    function $168() {
+    function $213() {
         var __this = this;
         var _$0vBlock = this.ctx.block, _$0vElem = this.ctx.elem, _$0block = this._currBlock || this.block;
         this.ctx || (this.ctx = {});

@@ -1,3 +1,7 @@
 @import url(../../blocks-catalog/b-catalog-item/b-catalog-item.css);
 @import url(../../blocks-catalog/b-catalog-item/__layout/b-catalog-item__layout.css);
+@import url(../../blocks-catalog/b-catalog-item/__layout/_column/b-catalog-item__layout_column_left.css);
+@import url(../../blocks-catalog/b-catalog-item/__layout/_column/b-catalog-item__layout_column_right.css);
 @import url(../../blocks-catalog/b-keywords/b-keywords.css);
+@import url(../../bem-bl/blocks-desktop/b-link/_pseudo/b-link_pseudo_yes.css);
+@import url(../../blocks-catalog/b-map/b-map.css);

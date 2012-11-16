@@ -53,7 +53,34 @@ exports.deps = [
         "elem": "core"
     },
     {
+        "block": "i-bem",
+        "elem": "dom"
+    },
+    {
+        "block": "i-ecma",
+        "elem": "string"
+    },
+    {
+        "block": "i-bem",
+        "elem": "dom",
+        "mod": "init"
+    },
+    {
+        "block": "i-bem",
+        "elem": "dom",
+        "mod": "init",
+        "val": "auto"
+    },
+    {
         "block": "b-page"
+    },
+    {
+        "block": "b-page",
+        "elem": "css"
+    },
+    {
+        "block": "b-page",
+        "elem": "js"
     },
     {
         "block": "b-search"

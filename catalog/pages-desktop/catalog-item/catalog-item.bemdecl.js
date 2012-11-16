@@ -59,17 +59,17 @@ exports.blocks = [
         ]
     },
     {
-        "name": "b-link"
-    },
-    {
-        "name": "b-map",
+        "name": "b-link",
         "mods": [
             {
-                "name": "provider",
+                "name": "pseudo",
                 "vals": [
-                    "yandex"
+                    "yes"
                 ]
             }
         ]
+    },
+    {
+        "name": "b-map"
     }
 ];

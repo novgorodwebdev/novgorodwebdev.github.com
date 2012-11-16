@@ -8,6 +8,12 @@
 /*borschik:include:../../bem-bl/blocks-common/i-ecma/__array/i-ecma__array.js*/;
 /*borschik:include:../../bem-bl/blocks-common/i-ecma/__function/i-ecma__function.js*/;
 /*borschik:include:../../bem-bl/blocks-common/i-bem/__internal/i-bem__internal.js*/;
+/*borschik:include:../../bem-bl/blocks-common/i-bem/__dom/i-bem__dom.js*/;
+/*borschik:include:../../bem-bl/blocks-common/i-ecma/__string/i-ecma__string.js*/;
+/*borschik:include:../../bem-bl/blocks-common/i-bem/__dom/_init/i-bem__dom_init_auto.js*/;
 /*borschik:include:../../blocks-catalog/b-catalog-item/b-catalog-item.js*/;
 /*borschik:include:../../blocks-catalog/b-catalog-item/__layout/b-catalog-item__layout.js*/;
 /*borschik:include:../../blocks-catalog/b-keywords/b-keywords.js*/;
+/*borschik:include:../../bem-bl/blocks-common/i-jquery/__leftclick/i-jquery__leftclick.js*/;
+/*borschik:include:../../bem-bl/blocks-desktop/b-link/_pseudo/b-link_pseudo_yes.js*/;
+/*borschik:include:../../blocks-catalog/b-map/b-map.js*/;

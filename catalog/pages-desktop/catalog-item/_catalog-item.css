@@ -14,10 +14,53 @@ vertical-align: top;
 
 /* ../../blocks-catalog/b-catalog-item/__layout/b-catalog-item__layout.css end */
 
+/* ../../blocks-catalog/b-catalog-item/__layout/_column/b-catalog-item__layout_column_left.css begin */
+.b-catalog-item__layout_column_left
+{
+}
+
+/* ../../blocks-catalog/b-catalog-item/__layout/_column/b-catalog-item__layout_column_left.css end */
+
+/* ../../blocks-catalog/b-catalog-item/__layout/_column/b-catalog-item__layout_column_right.css begin */
+.b-catalog-item__layout_column_right {
+}
+
+/* ../../blocks-catalog/b-catalog-item/__layout/_column/b-catalog-item__layout_column_right.css end */
+
 /* ../../blocks-catalog/b-keywords/b-keywords.css begin */
 .b-keywords
 {
 }
 
 /* ../../blocks-catalog/b-keywords/b-keywords.css end */
+
+/* ../../bem-bl/blocks-desktop/b-link/_pseudo/b-link_pseudo_yes.css begin */
+.b-link_pseudo_yes
+{
+    color: #1a3dc1;
+}
+
+.i-ua_js_yes .b-link_pseudo_yes
+{
+    text-decoration: none;
+
+    cursor: pointer;
+}
+
+.i-ua_js_yes .b-link_pseudo_yes .b-link__inner
+{
+    text-decoration: none;
+
+    color: inherit;
+    border-bottom: 1px dotted;
+}
+
+/* ../../bem-bl/blocks-desktop/b-link/_pseudo/b-link_pseudo_yes.css end */
+
+/* ../../blocks-catalog/b-map/b-map.css begin */
+.b-map
+{
+}
+
+/* ../../blocks-catalog/b-map/b-map.css end */
 

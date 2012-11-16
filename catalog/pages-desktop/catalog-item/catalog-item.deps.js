@@ -53,7 +53,34 @@ exports.deps = [
         "elem": "core"
     },
     {
+        "block": "i-bem",
+        "elem": "dom"
+    },
+    {
+        "block": "i-ecma",
+        "elem": "string"
+    },
+    {
+        "block": "i-bem",
+        "elem": "dom",
+        "mod": "init"
+    },
+    {
+        "block": "i-bem",
+        "elem": "dom",
+        "mod": "init",
+        "val": "auto"
+    },
+    {
         "block": "b-page"
+    },
+    {
+        "block": "b-page",
+        "elem": "css"
+    },
+    {
+        "block": "b-page",
+        "elem": "js"
     },
     {
         "block": "b-catalog-item"
@@ -61,6 +88,23 @@ exports.deps = [
     {
         "block": "b-catalog-item",
         "elem": "layout"
+    },
+    {
+        "block": "b-catalog-item",
+        "elem": "layout",
+        "mod": "column"
+    },
+    {
+        "block": "b-catalog-item",
+        "elem": "layout",
+        "mod": "column",
+        "val": "left"
+    },
+    {
+        "block": "b-catalog-item",
+        "elem": "layout",
+        "mod": "column",
+        "val": "right"
     },
     {
         "block": "b-catalog-item",
@@ -127,16 +171,29 @@ exports.deps = [
         "block": "b-link"
     },
     {
+        "block": "i-jquery",
+        "elem": "leftclick"
+    },
+    {
+        "block": "b-link",
+        "mod": "pseudo"
+    },
+    {
+        "block": "b-link",
+        "mod": "pseudo",
+        "val": "yes"
+    },
+    {
+        "block": "b-link",
+        "elem": "inner"
+    },
+    {
+        "block": "b-link",
+        "mod": "pseudo",
+        "val": "no"
+    },
+    {
         "block": "b-map"
-    },
-    {
-        "block": "b-map",
-        "mod": "provider"
-    },
-    {
-        "block": "b-map",
-        "mod": "provider",
-        "val": "yandex"
     }
 ];
 exports.depsByTechs = {
