@@ -171,29 +171,28 @@ exports.deps = [
         "block": "b-link"
     },
     {
-        "block": "i-jquery",
-        "elem": "leftclick"
-    },
-    {
-        "block": "b-link",
-        "mod": "pseudo"
-    },
-    {
-        "block": "b-link",
-        "mod": "pseudo",
-        "val": "yes"
-    },
-    {
-        "block": "b-link",
-        "elem": "inner"
-    },
-    {
-        "block": "b-link",
-        "mod": "pseudo",
-        "val": "no"
-    },
-    {
         "block": "b-map"
+    },
+    {
+        "block": "b-map",
+        "mod": "api"
+    },
+    {
+        "block": "b-map",
+        "mod": "api",
+        "val": "dynamic"
+    },
+    {
+        "block": "i-geo-point"
+    },
+    {
+        "block": "b-map",
+        "mod": "geo-objects"
+    },
+    {
+        "block": "b-map",
+        "mod": "geo-objects",
+        "val": "yes"
     }
 ];
 exports.depsByTechs = {

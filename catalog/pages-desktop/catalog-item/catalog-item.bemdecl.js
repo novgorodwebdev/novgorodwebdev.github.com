@@ -59,17 +59,23 @@ exports.blocks = [
         ]
     },
     {
-        "name": "b-link",
+        "name": "b-link"
+    },
+    {
+        "name": "b-map",
         "mods": [
             {
-                "name": "pseudo",
+                "name": "api",
+                "vals": [
+                    "dynamic"
+                ]
+            },
+            {
+                "name": "geo-objects",
                 "vals": [
                     "yes"
                 ]
             }
         ]
-    },
-    {
-        "name": "b-map"
     }
 ];

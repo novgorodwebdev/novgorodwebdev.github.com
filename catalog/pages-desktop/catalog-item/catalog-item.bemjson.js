@@ -79,26 +79,27 @@
                     mods   :{ column:'right' },
                     content:[
                         {
-                            block  :'b-map',
-                            content:'как подключиь карту https://github.com/bem/bem-bl/blob/gh-pages/blocks-desktop/i-bem/examples/030-i-bem_map.bemjson.js'
+                            block:'b-map',
+                            mods :{
+                                'api'        :'dynamic',
+                                'geo-objects':'yes'
+                            },
+                            js   :{
+                                'type'  :'yandex#map',
+                                'lang'  :'RU-ru',
+                                'center':[31.269844291845086, 58.52342351147416],
+                                'spn'   :[0.004096, 0.002311 ],
+                                'zoom'  :16,
+                                'points':[
+                                    {
+                                        "location"    :{"latitude":58.52278369717714, "longitude":31.270251987615346},
+                                        "name"        :"uno", "type":"single",
+                                        balloonContent:"Софийская площадь"
+                                    }
+                                ]
+                            }
                         }
                     ]
-                }
-            ]
-        },
-        {
-            attrs: { style: 'margin: 20px 0 20px 20px;' },
-            content: [
-                {
-                    block: 'b-link',
-                    mods: { pseudo: 'yes' },
-                    content: 'Псевдоссылка спаном'
-                }, '&nbsp;&nbsp;',
-                {
-                    block: 'b-link',
-                    mods: { pseudo: 'yes' },
-                    url: 'http://ya.ru',
-                    content: 'Псевдоссылка ссылкой'
                 }
             ]
         }

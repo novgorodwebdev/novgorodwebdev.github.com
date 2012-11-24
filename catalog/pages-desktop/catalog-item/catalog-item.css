@@ -3,5 +3,5 @@
 @import url(../../blocks-catalog/b-catalog-item/__layout/_column/b-catalog-item__layout_column_left.css);
 @import url(../../blocks-catalog/b-catalog-item/__layout/_column/b-catalog-item__layout_column_right.css);
 @import url(../../blocks-catalog/b-keywords/b-keywords.css);
-@import url(../../bem-bl/blocks-desktop/b-link/_pseudo/b-link_pseudo_yes.css);
-@import url(../../blocks-catalog/b-map/b-map.css);
+@import url(../../blocks-catalog/b-map/_api/b-map_api_dynamic.css);
+@import url(../../blocks-catalog/i-geo-point/i-geo-point.css);

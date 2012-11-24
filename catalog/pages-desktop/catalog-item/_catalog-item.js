@@ -3256,96 +3256,1015 @@ BEM.DOM.decl('b-keywords', {
 
 })();
 ;
-/**
- * leftClick event plugin
- *
- * Copyright (c) 2010 Filatov Dmitry (alpha@zforms.ru)
- * Dual licensed under the MIT and GPL licenses:
- * http://www.opensource.org/licenses/mit-license.php
- * http://www.gnu.org/licenses/gpl.html
- *
- * @version 1.0.0
- */
+BEM.DOM.decl({ name: 'b-map', modName: 'api', modVal: 'dynamic' }, {
 
-(function($) {
+    onSetMod: {
 
-var leftClick = $.event.special.leftclick = {
-
-    setup : function() {
-
-        $(this).bind('click', leftClick.handler);
-
-    },
-
-    teardown : function() {
-
-        $(this).unbind('click', leftClick.handler);
-
-    },
-
-    handler : function(e) {
-
-        if(!e.button) {
-            e.type = 'leftclick';
-            $.event.handle.apply(this, arguments);
-            e.type = 'click';
+        'js' : function() {
+            this.hasMod('static') || this.loadMapsApi();
         }
 
-    }
+    },
 
-};
+    // загружаемые пакеты
+    mapsPakages: [
+        // step one
+        [
+            'templateLayoutFactory',
+            'hotspot.Layer',
+            'hotspot.ObjectSource',
+            'geometry.pixel.LineString',
+            'package.geoObjects'
+        ],
+        // step two
+        [
+            'package.map'
+        ]
+    ],
 
-})(jQuery);;
-BEM.DOM.decl({'name': 'b-link', 'modName': 'pseudo', 'modVal': 'yes'}, {
+    // загрузчик API
+    loadMapsApi: function() {
+        var _this = this;
 
-    _onClick : function(e) {
+        if (!window.ymaps) {
+            var apiScript = document.createElement('script'),
+                apiCallback = 'ymapsloaded';
 
-        e.preventDefault();
+            window[apiCallback] = function() {
+                _this.onAPILoaded();
+            }
 
-        this.hasMod('disabled', 'yes') || this.afterCurrentEvent(function() {
-            this.trigger('click');
+            apiScript.src = ['http://api-maps.yandex.ru/2.0/?',
+                'ns=ymaps',
+                '&coordorder=longlat',
+                '&load=' + this.mapsPakages[0].join(','),
+                '&lang=' + this.params.lang,
+                '&mode=release',
+                '&onload=' + apiCallback].join('');
+
+            document.getElementsByTagName('head')[0].appendChild(apiScript);
+        } else {
+            this.onAPILoaded();
+        }
+    },
+
+    // после загрузки API
+    onAPILoaded: function() {
+        ymaps.load(this.mapsPakages[1].join(','), function() {
+            this.initMap();
+        }, this);
+    },
+
+    // инициализация карты
+    initMap: function() {
+        var _this = this,
+            domElem = this.domElem,
+            center = this.params.center || [55.76, 37.64],
+            spn = this.params.spn,
+            bounds = spn && [
+                [ center[0] - spn[0] / 2, center[1] - spn[1] / 2 ],
+                [ center[0] + spn[0] / 2, center[1] + spn[1] / 2 ]
+            ],
+            zoom = this.params.zoom || (spn && ymaps.util.bounds.getCenterAndZoom(bounds, [ domElem.width(), domElem.height() ]).zoom) || 10;
+
+        this.ymap = new ymaps.Map(this.elem('map')[0], {
+            type: this.params.type,
+            center: center,
+            zoom: zoom,
+            behaviors:  ['drag', 'dblClickZoom', 'multiTouch']
         });
 
-    }
+        this.ymap.zoomRange.get().then(function(range) {
+            if (zoom > range[1]) {
+                _this.ymap.setZoom(range[1], {
+                    callback: function() { _this.showMap(); }
+                });
+            } else {
+                _this.showMap();
+            }
+        });
 
+        this._extendsYmaps(ymaps);
+
+        this.attachEvents();
+
+        if (this.params.userPos)
+            this.showYa(this.params.userPos);
+
+        this.trigger('map-inited');
+    },
+
+    // скрываем статическую карту, показываем динамику
+    showMap: function() {
+        this.elem('map').css('visibility', 'visible');
+    },
+
+    // слушаемые события
+    attachEvents: function() {
+        this.ymap.events
+            .add('click', function() {
+                var _this = this;
+
+                this.trigger('user-action', { type: 'click' });
+            }, this)
+            .add('dblclick', function() {
+                if (this.firstClickTimer) {
+                    clearTimeout(this.firstClickTimer);
+                    this.firstClickNeedSend = 0;
+                }
+
+                this.trigger('user-action', { type: 'dblclick' });
+            }, this)
+            .add('mousedown', function() {
+                this.trigger('user-action', { type: 'mousedown' });
+            }, this)
+            .add('wheel', function() {
+                this.trigger('user-action', { type: 'wheel' });
+            }, this)
+            .add('balloonopen', function() {
+                this.trigger('user-action', { type: 'balloonopen' });
+            }, this)
+            .add('boundschange', this._onBoundsChangeCounter, this);
+
+        this.on('user-action', this._onUserAction, this);
+    },
+
+    // расширение для api-карт, чтобы отображать линии с помощью полигона
+    _extendsYmaps: function(ymaps) {
+        !ymaps.overlay && (ymaps.overlay = {});
+        ymaps.overlay.MultiLine = (function () {
+
+            /**
+             * @implements ymaps.IOverlay
+             */
+            function Overlay(geometry, data, options) {
+                this._geometry = geometry;
+                this._data = data;
+                this.options = new ymaps.option.Manager(options);
+                this.events = new ymaps.event.Manager({
+                    context: this
+                });
+            }
+
+            Overlay.prototype = {
+
+                setMap: function (map) {
+                    this._map = map;
+
+                    if (map) {
+                        this._onAddToMap(map);
+                    } else {
+                        this._onRemoveFromMap();
+                    }
+                },
+
+                getMap: function () {
+                    return this._map;
+                },
+
+                _onAddToMap: function (map) {
+                    if (!this._graphicsOverlay) {
+                        this._graphicsOverlay = ymaps.geoObject.overlayFactory.interactiveGraphics.createOverlay(this._getLineGeometry(), this._data);
+                    }
+                    this._graphicsOverlay.events.setParent(this.events);
+                    this._graphicsOverlay.options.setParent(this.options);
+                    this._graphicsOverlay.setMap(map);
+                },
+
+                _onRemoveFromMap: function () {
+                    if (this._graphicsOverlay) {
+                        this._graphicsOverlay.setMap(null);
+                        this._graphicsOverlay = null;
+                    }
+                },
+
+                setGeometry: function (geometry) {
+                    this._geometry = geometry;
+                    if (this._map) {
+                        this._graphicsOverlay.setGeometry(this._getLineGeometry());
+                    }
+                },
+
+                getGeometry: function () {
+                    return this._geometry;
+                },
+
+                getData: function () {
+                    return this._data;
+                },
+
+                _getLineGeometry: function () {
+                    var coords = this.getGeometry().getCoordinates();
+
+                    return new ymaps.geometry.pixel.LineString(
+                        coords.reduce(function (result, coord) {
+                            return result.concat(coord.splice(0, coord.length - 1), 0);
+                        }, [])
+                    );
+                }
+
+            };
+
+            return Overlay;
+
+        }());
+    },
+
+    _onUserAction: function(e, data) {
+        data && data.type != 'mousedown' && (this.firstClickNeedSend = 0)
+        this.isUserAction = (!data || !data.controls);
+        this.elem('goto-map').show();
+    },
+
+    _mapButtonUpdate: function(e, data) {
+        var bounds = data.bounds,
+            pointId = data.selectedPoint && data.selectedPoint.params.id;
+
+        this.elem('goto-map').attr(
+            'href',
+            this.params.mapUrl.replace(/\&?(source)=[^&$]*/gi, '') +
+                ( (this.hasMod('geo-objects-yes') || pointId) ? '&where=' : '' ) +
+                '&ll=' + data.center.join() +
+                '&spn=' + [ bounds[1][0] - bounds[0][0], bounds[1][1] - bounds[0][1] ].join() +
+                '&z=' + data.zoom +
+                ((pointId)
+                    ? ('&ol=biz'+ '&oid=' + pointId)
+                    : ''
+                )
+        );
+    },
+
+    _onBoundsChangeCounter: function(e) {
+    },
+
+    // определить положение по geo api
+    _geoLocation: function() {
+        var _this = this;
+
+        BEM.blocks['i-geolocation'].get({}, function(data) {
+            if (data.error) {
+                spin.delMod('progress');
+                icon.show();
+            } else {
+                var yaPointData = {
+                    latitude: data.coords.latitude,
+                    longitude: data.coords.longitude
+                };
+
+                this._ajax = BEM.create('i-request_type_ajax', {
+                    url: '//www.yandex.ru/gpsave',
+                    dataType: 'jsonp',
+                    callbackCtx: _this
+                });
+
+                this._ajax.get({
+                        lon: data.coords.longitude,
+                        lat: data.coords.latitude,
+                        precision: data.coords.accuracy,
+                        persistent: 1,
+                        device: 1,
+                        format: 'JSONP',
+                        lang: 'ru',
+                        yu: Lego.params.yandexuid
+                    },
+                    function(data) {
+                        yaPointData.address = data.address;
+
+                        this.showYa(yaPointData, function() {
+                            this.findBlockInside('controls', 'b-spin').delMod('progress');
+                            this.findElem('control-icon', 'type', 'userlocation').show();
+
+                            this.getGeoData(null, null, function() {
+                                this.fitAll();
+                            });
+                        });
+                    }
+                );
+            }
+        });
+    },
+
+    // выставить метку Я
+    showYa: function(coords, callback) {
+        if (this.yaPoint)
+            this.ymap.geoObjects.remove(this.yaPoint);
+
+        this.yaPoint = new ymaps.Placemark([ coords.longitude, coords.latitude ], {
+            iconContent: 'ya',
+            iconType: 'ya',
+
+            hintContent: 'Ваше местоположение', // TODO: I18N!
+
+            balloonContentBody: coords.address,
+            balloonContentHeader: 'Ваше местоположение',
+            isIconHovered: 'no'
+        }, {
+            iconLayout: ymaps.templateLayoutFactory.createClass(
+                '<div class="i-geo-point i-geo-point_type_ya i-geo-point_hovered_$[properties.isIconHovered]"> </div>'
+            ),
+            zIndex: 1,
+            openBalloonOnClick: true,
+            balloonAutoPan: true,
+            balloonMaxWidth: 320,
+            balloonMaxHeight: 250
+        });
+
+        this.ymap.geoObjects.add(this.yaPoint);
+
+        callback && callback.call(this);
+    },
+
+    // длительность анимации
+    animDuration: 400,
+
+    getCenter: function() {
+        return this.ymap.getCenter();
+    },
+
+    getZoom: function() {
+        return this.ymap.getZoom();
+    },
+
+    getGlobalPixelCenter: function() {
+        return this.ymap.getGlobalPixelCenter();
+    },
+
+    getBounds: function() {
+        return this.ymap.getBounds();
+    },
+
+    toGlobalPixels: function(coords, zoom) {
+        return ymaps.projection.wgs84Mercator.toGlobalPixels([ parseFloat(coords[0]), parseFloat(coords[1]) ], zoom || this.ymap.getZoom())
+    },
+
+    fromGlobalPixels: function(coords, zoom) {
+        return ymaps.projection.wgs84Mercator.fromGlobalPixels([ parseFloat(coords[0]), parseFloat(coords[1]) ], zoom || this.ymap.getZoom());
+    },
+
+    setCenter: function(center, zoom) {
+        zoom = zoom || this.getZoom();
+        this.setGlobalPixelCenter(this.toGlobalPixels(center, zoom), zoom);
+    },
+
+    setGlobalPixelCenter: function(center, zoom) {
+        this.ymap.setGlobalPixelCenter(
+            center,
+            zoom || this.getZoom(),
+            {
+                //checkZoomRange: true,
+                duration: this.animDuration
+            }
+        );
+    },
+
+    changeZoom: function(dz) {
+        this.zoomChain = this.zoomChain || [];
+        this.zoomChain.push(dz);
+
+        if (this.zoomChain.length === 1)
+            this._changeZoom();
+    },
+
+    _changeZoom: function(dz) {
+        var zoomRange = this.ymap.zoomRange.getCurrent(),
+            onActionEnd = function() {
+                var dz = this.zoomChain.shift();
+
+                this.ymap.action.events.remove('end', onActionEnd, this);
+
+                dz && this._changeZoom(this.getZoom() + dz);
+            };
+
+
+        if (this.ymap.action.getCurrentState().isTicking) {
+            this.ymap.action.events.add('end', onActionEnd, this);
+        } else {
+            var zoom = this.getZoom() + this.zoomChain.shift();
+
+            // выставляем зум, если можно
+            if (zoom >= zoomRange[0] && zoom <= zoomRange[1]) {
+                this.setGlobalPixelCenter(this.toGlobalPixels(this.getCenter(), zoom), zoom);
+                this.ymap.action.events.add('end', onActionEnd, this);
+            } else {
+                this.zoomChain.shift();
+                this.zoomChain.length && this._changeZoom();
+            }
+        }
+    },
+
+    // передвинуть карту на точку
+    moveTo: function(center, zoom) {
+        this.setGlobalPixelCenter(this.toGlobalPixels(center, zoom), zoom);
+    },
+
+    destruct: function() {
+        delete ymaps;
+        this.ymap.destroy();
+        delete this.ymap;
+    }
 }, {
-
-    live : function() {
-
-        this.__base.apply(this, arguments);
-
-        this.liveBindTo({ modName : 'pseudo', modVal : 'yes' }, 'leftclick', function(e) {
-            this._onClick(e);
-        });
-
-    }
 
 });
 ;
-/** @requires BEM */
-/** @requires BEM.DOM */
+BEM.decl({ name: 'i-geo-point' }, {
+    onSetMod: {
+        js: function() {
+            var point = this.params;
 
-(function(undefined) {
+            this.mapPoint = new ymaps.Placemark([ point.location.longitude, point.location.latitude ], {
+                iconContent: point.iconContent,
+                iconType: point.type,
+                iconWithContent: (point.type !== 'single' && point.type !== 'adv'),
+                iconUrl: point.url,
 
-BEM.DOM.decl('b-map', {
+                hintContent: point.hint,
 
-    onSetMod : {
+                balloonContent: point.balloonContent,
+                isIconHovered: 'no'
+            }, {
+                iconLayout: ymaps.templateLayoutFactory.createClass(
+                    '<div href="$[properties.iconUrl]" class="i-geo-point [if properties.iconType]i-geo-point_type_$[properties.iconType][endif] i-geo-point_hovered_$[properties.isIconHovered]" target="_blank">' +
+                        '[if properties.iconWithContent]<span class="i-geo-point__cont">$[properties.iconContent]</span>[endif]' +
+                    '</div>'
+                ),
+                zIndex: 1,
+                openBalloonOnClick: false,
+                balloonAutoPan: false,
+                balloonMaxWidth: 320,
+                balloonMaxHeight: 250,
+                balloonScrollX: false
+            });
 
-        'js' : function() {
-            /* ... */
-            console.log('init');
-            console.log(this);
+            // не вешаем события mouseenter и mouseleave на iPad'ах
+            if (navigator.userAgent.match(/iPad/i) == null) {
+                this.mapPoint.events.add('mouseenter', function() { this.trigger('point-mouseenter') }, this);
+                this.mapPoint.events.add('mouseleave', function() { this.trigger('point-mouseleave') }, this);
+            }
+            this.mapPoint.events.add('click', function(e) {
+                var origEvent = e.originalEvent.domEvent.originalEvent;
+                this.trigger('point-select');
+
+                origEvent.preventDefault && origEvent.preventDefault();
+                origEvent.returnValue = false;
+                return false;
+            }, this);
+
+            this.trigger('point-add');
+        },
+
+        selected: {
+            '': function() {
+                this.mapPoint.options.set('zIndex', this.zIndex);
+                this.mapPoint.properties.set('isIconHovered', 'no');
+            },
+
+            'yes': function() {
+                this.mapPoint.options.set('zIndex', '1000');
+                this.mapPoint.properties.set('isIconHovered', 'no');
+            }
+        },
+
+        hovered: {
+            '': function() {
+                this.mapPoint.options.set('zIndex', this.zIndex);
+                this.mapPoint.properties.set('isIconHovered', 'no');
+            },
+
+            'yes': function() {
+                this.mapPoint.options.set('zIndex', '1000');
+                this.mapPoint.properties.set('isIconHovered', 'yes');
+
+            }
+        }
+    },
+
+    destruct: function() {
+        this.trigger('point-del');
+    }
+}, {});
+
+
+BEM.decl('i-snake', {
+    onSetMod: {
+        js: function() {
+            this.map = this.params.map;
+
+            this.size = 10;
+            this.step = 1;
+            this.coords = [ this.map.getGlobalPixelCenter() ];
+
+            this.coords[1] = [ this.coords[0][0], this.coords[0][1] + this.size ];
+            this.len = this.coords.length - 1;
+
+            this.line = new ymaps.Polyline(this._getCoords(), {}, {
+                strokeWidth: 8
+            });
+
+            this.points = [];
+            for (var i = 0, n = 5; i < n; i++)
+                this.points.push(this.createPoint());
+
+
+            this.map.ymap.geoObjects.add(this.line);
+
+            this.params.btn.elem('text').html('Счет: ' + (this.len - 1));
+
+            this.start();
+        }
+    },
+
+    _sign: function(val) {
+        return (val > 0) - (val < 0);
+    },
+
+    _getCoords: function() {
+        var geoCoords = [];
+        for(var coords = this.coords, i = 0, n = coords.length; i < n; i++)
+            geoCoords[i] = this.map.fromGlobalPixels(coords[i]);
+
+        return geoCoords;
+    },
+
+    start: function() {
+        var _this = this;
+        this.timer = setInterval(function() {_this._tick()}, 10);
+        $(window).bind('keydown', function(e) { return _this.control(e); })
+    },
+
+    stop: function() {
+        clearInterval(this.timer);
+        //todo: unsubscribe control
+    },
+
+    _tick: function() {
+        this.move();
+    },
+
+    control: function(e) {
+        var keyCode = e.keyCode;
+
+        if (keyCode == 27)
+            this.stop();
+
+        // horizontal
+        var head = this.coords[0],
+            tail = this.coords[this.coords.length - 1],
+            penult = this.coords[this.coords.length - 2],
+            d = 0.00001;
+
+        if (head[1] === this.coords[1][1]) {
+            // up
+            if (keyCode == 38) {
+                this.coords.unshift([head[0], head[1] - d]);
+                return false
+            }
+            // down
+            if (keyCode == 40) {
+                this.coords.unshift([head[0], head[1] + d]);
+                return false
+            }
         }
 
+        // vertical
+        if (head[0] === this.coords[1][0]) {
+            // left
+            if (keyCode == 37) {
+                this.coords.unshift([head[0] - d, head[1]]);
+                return false
+            }
+            // right
+            if (keyCode == 39) {
+                this.coords.unshift([head[0] + d, head[1]]);
+                return false
+            }
+        }
+
+        if (keyCode >= 37 &&  keyCode <= 40) return false;
+    },
+
+    move: function() {
+        var length = 0,
+            newHead = this.moveCoord(this.coords[0], this.coords[1]);
+
+        for (var i = 0, n = this.coords.length-1; i < n; i++)
+            length += Math.abs(this.coords[i][0] - this.coords[i+1][0]) + Math.abs(this.coords[i][1] - this.coords[i+1][1]);
+
+        this.eatPoints(this.coords[0], newHead);
+        if (!this.checkCross(this.coords[0], newHead))
+            this.coords[0] = newHead;
+        else
+            this.die();
+
+        if (Math.abs(length - this.size * this.len) < 0.001) {
+            var tail = this.coords[this.coords.length - 1],
+                newTail = this.moveCoord(tail, this.coords[this.coords.length - 2], true);
+            if (this.coords.length > 2) {
+                var penult = this.coords[this.coords.length - 2];
+                if (tail[0] == penult[0] && this._sign(penult[1] - tail[1]) != this._sign(penult[1] - newTail[1]) ||
+                    tail[1] == penult[1] && this._sign(penult[0] - tail[0]) != this._sign(penult[0] - newTail[0])) {
+                    this.coords.pop();
+                    this.coords[this.coords.length - 1] = this.moveCoord(this.coords[this.coords.length - 1], this.coords[this.coords.length - 2], true);
+                } else {
+                    this.coords[this.coords.length - 1] = newTail;
+                }
+            } else {
+                this.coords[this.coords.length - 1] = newTail;
+            }
+        }
+
+        this.line.geometry.setCoordinates(this._getCoords());
+    },
+
+    moveCoord: function(point, nextPoint, reverse) {
+        if (point[0] == nextPoint[0]) {
+            return [ point[0], point[1] + this.step * this._sign(point[1] - nextPoint[1]) * (reverse ? -1 : 1) ]
+        }
+
+        if (point[1] == nextPoint[1]) {
+            return [ point[0] + this.step * this._sign(point[0] - nextPoint[0]) * (reverse ? -1 : 1), point[1] ]
+        }
+    },
+
+    createPoint: function() {
+        var posOffset = [ 350 - Math.round(Math.random() * 700), 150 - Math.round(Math.random() * 300)],
+            mapCenter = this.map.getGlobalPixelCenter(),
+            point = new ymaps.Placemark(this.map.fromGlobalPixels([mapCenter[0] + posOffset[0], mapCenter[1] + posOffset[1]] ), {
+                iconType: 'ya',
+                hintContent: 'Съешь меня',
+                isIconHovered: 'no'
+            }, {
+                iconLayout: ymaps.templateLayoutFactory.createClass(
+                    '<div class="i-geo-point i-geo-point_type_ya i-geo-point_hovered_$[properties.isIconHovered]"> </div>'
+                ),
+                zIndex: 1,
+                openBalloonOnClick: false
+            });
+        this.map.ymap.geoObjects.add(point);
+
+        return point;
+    },
+
+    eatPoints: function(head, newHead) {
+        var points = this.points,
+            lineW = 5,
+            gcoord;
+
+        for (var i = points.length; i--;) {
+            gcoord = this.map.toGlobalPixels(points[i].geometry.getCoordinates());
+
+            if (
+                (head[0] === newHead[0] && gcoord[0] + lineW > head[0] && gcoord[0] - lineW < head[0] && this._sign(gcoord[1] - head[1]) != this._sign(gcoord[1] - newHead[1])) ||
+                    (head[1] === newHead[1] && gcoord[1] + lineW > head[1] && gcoord[1] - lineW < head[1] && this._sign(gcoord[0] - head[0]) != this._sign(gcoord[0] - newHead[0]))
+                ) {
+                this.map.ymap.geoObjects.remove(points[i]);
+                points.splice(i, 1);
+                points.push(this.createPoint());
+                this.len += 1;
+                this.params.btn.elem('text').html('Счет: ' + (this.len - 1));
+            }
+        }
+    },
+
+    checkCross: function(p1, p2) {
+        var i, n;
+        if (p1[1] === p2[1])
+            for (i = 0, n = this.coords.length-1; i < n; i++)
+                if (this.coords[i][0] === this.coords[i+1][0] && ( (this.coords[i][1] >= p1[1] && this.coords[i+1][1] <= p1[1]) || (this.coords[i][1] <= p1[1] && this.coords[i+1][1] >= p1[1]) ) && this._sign(this.coords[i][0] - p1[0]) != this._sign(this.coords[i][0] - p2[0]))
+                    return true;
+        if (p1[0] === p2[0])
+            for (i = 0, n = this.coords.length-1; i < n; i++)
+                if (this.coords[i][1] === this.coords[i+1][1] && ( (this.coords[i][0] >= p1[0] && this.coords[i+1][0] <= p1[0]) || (this.coords[i][0] <= p1[0] && this.coords[i+1][0] >= p1[0]) ) && this._sign(this.coords[i][1] - p1[1]) != this._sign(this.coords[i][1] - p2[1]))
+                    return true;
+        return false;
+    },
+
+    die: function() {
+        this.line.options.set('strokeColor', '#AA0000');
+        this.stop();
+    },
+
+    destruct: function() {
+        var points = this.points;
+
+        for (var i = points.length; i--;)
+            this.map.ymap.geoObjects.remove(points[i]);
+        this.map.ymap.geoObjects.remove(this.line);
+    }
+});;
+BEM.DOM.decl({ name: 'b-map', modName: 'geo-objects', modVal: 'yes' }, {
+
+    // инициализация карты
+    initMap: function() {
+        this.geoObjectsArray = [];
+        this.selected = null;
+
+        this.__base.apply(this, arguments);
+
+        this.params.points && this.createGeoObjects(this.params.points);
+
+        this.params.streetLine && this.createStreetLine(this.params.streetLine);
+    },
+
+    attachEvents: function() {
+        this.__base.apply(this, arguments);
+
+        // хендлеры событий на точках карты
+        this.pointsHandlers = {
+            'point-add': function(e) {
+                this._addPoint(e.target.mapPoint);
+            },
+
+            'point-mouseenter': function(e, data) {
+                this._hoverPoint(this._getTargetPoint(e, data));
+            },
+
+            'point-mouseleave': function(e, data) {
+                this._unhoverPoint(this._getTargetPoint(e, data));
+            },
+
+            'point-select': function(e, data) {
+                this._selectPoint(this._getTargetPoint(e, data));
+            },
+
+            'point-del':function(e, data) {
+                this._delPoint(this._getTargetPoint(e, data));
+            }
+        }
+
+        // подписываемся на события на точках карты
+        for (var name in this.pointsHandlers)
+            if (this.pointsHandlers.hasOwnProperty(name))
+                BEM.blocks['i-geo-point'].on(name, this.pointsHandlers[name], this)
+
+        // слушаем события на карте
+        this.ymap.events
+            .add('click', function() {
+                this._unselectPoint();
+            }, this)
+            .add('boundschange', this._onBoundsUpdate, this);
+    },
+
+    createGeoObjects: function(points) {
+        this.add(points);
+        this.fitAll(this.params.zoom);
+
+        this.trigger('map-points-added', { total: this.params.total });
+
+        if (this.params.searchText && this.params.searchText === 'Яндекс')
+            this.bindTo('userlocation', 'click', function() {
+                if (this.snake) {
+                    this.snake.destruct();
+                }
+
+                if (this.findBlockInside('b-map-panel').getMod(this.findBlockInside('b-map-panel').elem('switcher'), 'state') != 'closed')
+                    this.findBlockInside('b-map-panel')._toggleState();
+
+                this.delMod('geo-objects-search');
+
+                for (var i = this.geoObjectsArray.length; i--;)
+                    this.geoObjectsArray[i].destruct();
+
+                this.snake = BEM.create('i-snake', { map: this, btn: this.findBlockOn(this.elem('goto-map'), 'b-form-button') });
+            })
+    },
+
+    createStreetLine: function(lines) {
+        var _this = this;
+
+        this._streetStrokeOpacity = 0.4;
+
+        this._streetObject = new ymaps.Polygon(lines, {}, {
+            strokeColor: '#000000',
+            fillColor: '#00000000',
+            strokeWidth: 4,
+            strokeOpacity: this._streetStrokeOpacity,
+            simplification: false,
+            interactivityModel: 'default#transparent',
+            overlayFactory: {
+                createOverlay: function (pixelGeometry, data, options) {
+                    return new ymaps.overlay.MultiLine(pixelGeometry, data, options);
+                }
+            }
+        });
+
+        this._streetObject.events
+            .add('mouseenter', function() {
+                this._streetObject.options.set('strokeOpacity', this._streetStrokeOpacity);
+
+                clearTimeout(this._hideStreetTimeout);
+                this._clearHideStreetAnimation();
+            }, this)
+            .add('mouseleave', function() {
+                this._streetObject.options.set('strokeOpacity', '0');
+            }, this);
+
+        this._hideStreetTimeout = setTimeout(function() { _this._hideStreetTimeoutFunc() }, 2000);
+
+        this.ymap.geoObjects.add(this._streetObject);
+    },
+
+    _hideStreetTimeoutFunc: function() {
+        var _this = this;
+        this._hideStreetAnimationTick = 0;
+        this._hideStreetAnimationTimeout = setTimeout(function () { return _this._hideStreetAnimationFunc() }, 100);
+    },
+
+    _hideStreetAnimationFunc: function() {
+        var _this = this,
+            optMax = this._streetStrokeOpacity,
+            opt;
+
+        this._hideStreetAnimationTick++;
+
+        opt = optMax - optMax * Math.sin(Math.PI * this._hideStreetAnimationTick / 20);
+        this._streetObject.options.set('strokeOpacity', Math.round(opt * 100) / 100);
+
+        if (opt > 0)
+            this._hideStreetAnimationTimeout = setTimeout(function() { _this._hideStreetAnimationFunc()}, 10);
+    },
+
+    _clearHideStreetAnimation: function() {
+        this._hideStreetAnimationTick = 0;
+        clearTimeout(this._hideStreetAnimationTimeout);
+    },
+
+    _addPoint: function(point) {
+        this.ymap.geoObjects.add(point);
+    },
+
+    _delPoint: function(point) {
+        this.ymap.geoObjects.remove(point.mapPoint);
+    },
+
+    _hoverPoint: function(point) {
+        point.setMod('hovered', 'yes');
+    },
+
+    _unhoverPoint: function(point) {
+        point.delMod('hovered');
+    },
+
+    _selectPoint: function(point) {
+        if (this.selected !== point) {
+            this._unselectPoint();
+            this.selected = point;
+        }
+        var balloon = point.mapPoint.balloon.open(), // открываем балун, получаем ссылку на него
+            bBounds = balloon.getOverlay().getBalloonLayout().getClientBoundingRect(),
+            bSize = [ Math.abs(bBounds[1][0] - bBounds[0][0]), Math.abs(bBounds[1][1] - bBounds[0][1]) + 21 ], // 21 -- высота хвоста
+            zoom = this.getZoom(),
+            gCenter = this.getGlobalPixelCenter(),
+            mapBounds = this.getBounds(),
+            gMapBounds = [ this.toGlobalPixels(mapBounds[0]), this.toGlobalPixels(mapBounds[1]) ],
+            gPoint = this.toGlobalPixels(point.mapPoint.geometry.getCoordinates(), zoom),
+            gBalloonBounds = [
+                [gPoint[0] - bSize[0] / 2, gPoint[1]],
+                [gPoint[0] + bSize[0] / 2, gPoint[1] - bSize[1]]
+            ],
+            gBalloonOffset = [
+                [ gMapBounds[0][0] - gBalloonBounds[0][0], gMapBounds[0][1] - gBalloonBounds[0][1] ],
+                [ gMapBounds[1][0] - gBalloonBounds[1][0], gMapBounds[1][1] - gBalloonBounds[1][1] ]
+            ],
+            gOffset = [
+                (gBalloonOffset[0][0] > 0 && Math.abs(gBalloonOffset[0][0]) < bSize[0])
+                    ? gBalloonOffset[0][0] + 30
+                    : (gBalloonOffset[1][0] < 0 && Math.abs(gBalloonOffset[1][0]) < bSize[0])
+                        ? gBalloonOffset[1][0] - 20
+                        : 0,
+                (gBalloonOffset[0][1] < 0)
+                    ? gBalloonOffset[0][1] - 20
+                    : (gBalloonOffset[1][1] > 0)
+                        ? gBalloonOffset[1][1] + 30
+                        : 0
+            ],
+            panelOffset = [0, 0];
+
+        point.setMod('selected', 'yes');
+
+        this.setGlobalPixelCenter([gCenter[0] - gOffset[0] + panelOffset[0], gCenter[1] - gOffset[1]], zoom);
+        this._onBoundsUpdate();
+    },
+
+    _unselectPoint: function() {
+        if (!this.selected) return;
+        this.selected.delMod('selected');
+        this.selected.mapPoint.balloon.close();
+        this.selected.trigger('point-unselect');
+        this.selected = null;
+
+        this._onBoundsUpdate();
+    },
+
+    // обработчик изменения показываемой области
+    _onBoundsUpdate: function(e) {
+        // прокидываем событие, чтобы внешние блоки могли на него подписаться
+        this.trigger('map-boundschange', {
+            center: this.getCenter(),
+            bounds: this.getBounds(),
+            zoom: (e)
+                ? e.get('newZoom')
+                : this.getZoom(),
+            selectedPoint: this.selected
+        });
+    },
+
+    // поиск точки по имени
+    _findPointByName: function(name) {
+        for (var i = 0, n = this.geoObjectsArray.length, point; point = this.geoObjectsArray[i], i < n; i++)
+            if (point.params.name.toString() == name.toString()) return point;
+        return false;
+    },
+
+    _getTargetPoint: function(e, data) {
+        return (e.target.mapPoint && e.target) || (data && this._findPointByName(data.name));
+    },
+
+    // добавить точку/массив точек
+    add: function(point) {
+        var geoObjectsArray = this.geoObjectsArray;
+        for (var i = 0, n = point.length !== undefined ? point.length : 1, p; p = point[i] || point, i < n; i++) {
+            geoObjectsArray.push(BEM.create({ block: 'i-geo-point', mods: { type: p.type } }, p));
+        }
+
+        var groups = [],
+            inGroup, nGroups,
+            radius = 20;
+        // группируем точки с одинаковыми координатами
+        for (i = 0, n = geoObjectsArray.length; i < n; i++) {
+            var pointLocation = geoObjectsArray[i].params.location;
+            for (inGroup = 0, nGroups = groups.length; inGroup < nGroups; inGroup++) {
+                var groupLocation = geoObjectsArray[groups[inGroup][0]].params.location;
+                if (groupLocation.longitude == pointLocation.longitude && groupLocation.latitude == pointLocation.latitude)
+                    break;
+            }
+            groups[inGroup] ? groups[inGroup].push(i) : (groups[inGroup] = [i]);
+        }
+        // смешаем точки в каждой группе по кругу
+        for (i = 0, n = groups.length; i < n; i++) {
+            geoObjectsArray[groups[i][0]].mapPoint.options.set('zIndex', (geoObjectsArray[groups[i][0]].zIndex = (groups.length - i) + groups[i].length));
+            for (inGroup = 1, nGroups = groups[i].length; inGroup < nGroups; inGroup++) {
+                geoObjectsArray[groups[i][inGroup]].mapPoint.options
+                    .set('iconOffset', [ Math.round(radius * Math.cos(2 * Math.PI * inGroup / nGroups)) , Math.round(radius * Math.sin(2 * Math.PI * inGroup / nGroups))  ])
+                    .set('zIndex', (geoObjectsArray[groups[i][inGroup]].zIndex = nGroups - inGroup));
+            }
+        }
+    },
+
+    // удалить точку
+    remove: function(item) {
+        for (var i = 0, n = this.geoObjectsArray.length; i < n; i++) {
+            if (this.geoObjectsArray[i] === item) {
+                item.destruct();
+                this.geoObjectsArray.splice(i, 1);
+                return;
+            }
+        }
+    },
+
+    // удалить все точки
+    removeAll: function() {
+        for (var i = 0, n = this.geoObjectsArray.length; i < n; i++)
+            this.geoObjectsArray[i].destruct();
+
+        this.geoObjectsArray = [];
+    },
+
+    // уместить все точки в видимой области
+    fitAll: function(zoom) {
+        var _this = this,
+            lats = [],
+            longs = [],
+            rightTop,
+            leftBottom,
+            centerAndZoom;
+
+        for (var i = 0, n = this.geoObjectsArray.length, loc; i < n; i++) {
+            loc = this.geoObjectsArray[i].params.location;
+            lats.push(loc.latitude);
+            longs.push(loc.longitude);
+        }
+
+        leftBottom = [ Math.min.apply(Math, longs), Math.max.apply(Math, lats) ];
+        rightTop = [ Math.max.apply(Math, longs), Math.min.apply(Math, lats) ];
+
+        centerAndZoom = ymaps.util.bounds.getCenterAndZoom([leftBottom, rightTop], [ this.domElem.width() * 0.8, this.domElem.height() * 0.8]);
+
+        this.ymap.zoomRange.get(centerAndZoom.center).then(function(range){
+            _this.moveTo(centerAndZoom.center, Math.min(zoom || _this.getZoom(), centerAndZoom.zoom , range[1]));
+
+            _this.showMap();
+        });
+    },
+
+    destruct: function() {
+        for (var name in this.pointsHandlers)
+            if (this.pointsHandlers.hasOwnProperty(name))
+                BEM.blocks['i-geo-point'].un(name, this.pointsHandlers[name], this);
+
+        this.__base.apply(this, arguments);
     }
 
 }, {
 
-    live : function() {
-        /* ... */
-    }
-
 });
-
-})();
 ;

@@ -14,6 +14,6 @@
 /*borschik:include:../../blocks-catalog/b-catalog-item/b-catalog-item.js*/;
 /*borschik:include:../../blocks-catalog/b-catalog-item/__layout/b-catalog-item__layout.js*/;
 /*borschik:include:../../blocks-catalog/b-keywords/b-keywords.js*/;
-/*borschik:include:../../bem-bl/blocks-common/i-jquery/__leftclick/i-jquery__leftclick.js*/;
-/*borschik:include:../../bem-bl/blocks-desktop/b-link/_pseudo/b-link_pseudo_yes.js*/;
-/*borschik:include:../../blocks-catalog/b-map/b-map.js*/;
+/*borschik:include:../../blocks-catalog/b-map/_api/b-map_api_dynamic.js*/;
+/*borschik:include:../../blocks-catalog/i-geo-point/i-geo-point.js*/;
+/*borschik:include:../../blocks-catalog/b-map/_geo-objects/b-map_geo-objects_yes.js*/;

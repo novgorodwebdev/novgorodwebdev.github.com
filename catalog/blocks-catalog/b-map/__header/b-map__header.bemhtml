@@ -1,3 +1,0 @@
-block b-map, elem header {
-    tag: 'h3'
-}

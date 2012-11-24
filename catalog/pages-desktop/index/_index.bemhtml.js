@@ -459,7 +459,7 @@ var BEMHTML = (function(exports) {
         return;
     }
     function $179() {
-        if (!(this["__$anflg"] !== 272899282) === false) {
+        if (!(this["__$anflg"] !== 143380771) === false) {
             if (!!this.elem === false) {
                 return $182.call(this);
             } else {
@@ -501,7 +501,7 @@ var BEMHTML = (function(exports) {
         {
             "";
             var __r41 = this["__$anflg"];
-            this["__$anflg"] = 272899282;
+            this["__$anflg"] = 143380771;
             {
                 "";
                 var __r42 = this.ctx;
@@ -627,12 +627,28 @@ var BEMHTML = (function(exports) {
                     if (mods) {
                         var modName;
                         for (modName in mods) {
-                            if (mods.hasOwnProperty(modName) && mods[modName] && mods[modName].toString().length) {
-                                var modVal = mods[modName];
-                                res.push(" ");
-                                elem ? buildElemClass(block, elem, modName, modVal, res) : buildBlockClass(block, modName, modVal, res);
+                            if (!mods.hasOwnProperty(modName)) {
+                                continue;
                             } else {
                                 undefined;
+                            }
+                            var modVal = mods[modName];
+                            if (modVal == null) {
+                                continue;
+                            } else {
+                                undefined;
+                            }
+                            modVal = mods[modName] + "";
+                            if (!modVal) {
+                                continue;
+                            } else {
+                                undefined;
+                            }
+                            res.push(" ");
+                            if (elem) {
+                                buildElemClass(block, elem, modName, modVal, res);
+                            } else {
+                                buildBlockClass(block, modName, modVal, res);
                             }
                         }
                     } else {

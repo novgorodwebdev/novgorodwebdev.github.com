@@ -1,3 +1,0 @@
-block b-map, elem layout {
-    content: '<div id="ya-map" style="width: 600px; height: 450px"></div>'
-}
